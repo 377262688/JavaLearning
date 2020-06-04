@@ -25,7 +25,8 @@
 ## 缓存
 其中 Byte,Short,Integer,Long 默认采用缓存来纪录-128～127之间的数字，
 在使用 Integer i = 3 的时候，实际是调用了 Integer.valueOf(3) 来获取缓存的，
-因此并不是新建对象，因此 new Integer(127) == new Integer(127) 为true，
+因此并不是新建对象。
+ new Integer(127) == new Integer(127) 为false,因为是两个不同的对象，和缓存无关
 而 new Integer(128) == new Integer(128) 为false
 
 ## 拆箱与装箱
