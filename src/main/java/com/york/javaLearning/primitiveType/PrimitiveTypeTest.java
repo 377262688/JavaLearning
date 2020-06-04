@@ -20,5 +20,7 @@ public class PrimitiveTypeTest {
         System.out.println(i == j);
         // Integer类重写了equals方法，比较值是否相等
         System.out.println(i.equals(j));
+
+        System.out.println(Character.highSurrogate(1));
     }
 }
