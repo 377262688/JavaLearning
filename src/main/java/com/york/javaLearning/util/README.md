@@ -1,8 +1,12 @@
 # java.util 包中的工具类
 
 # Map
+
  ## HashMap
- 
+- 哈希表的实现
+- 无序
+- 访问速度快
+- key不允许重复（只允许存在一个null key）
  其中用了 tableSizeFor(int cap) 方法来计算容量，此方法的作用是保证 数组大小总为2的整数幂。参见https://blog.csdn.net/Z_ChenChen/article/details/82955221
  threshold 的值为 cap * loadFactor; 例如 数组容量16 ，负载因子 0.75 ，则 threshold 的值为12
  ### Node<K,V>()
@@ -44,24 +48,36 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,boolean evict){}
 防止链表和红黑树之间的频繁转换，转换的效率非常底下／
 #### 最大容量为什么是 1 << 30
 由于计算机采用补码形式来表示，int 占用32位，可以向左移动31位，但是最左边的一位是符号位，用来表示正负。
- ## TreeMap
- ## HashTable
- ## SortedMap
+## TreeMap
+- 红黑树的实现
+- TreeMap 中保存的记录会根据 Key 排序（默认为升序排序），因此使用 Iterator 遍历时得到的记录是排过序的
+- 因为需要排序，所以TreeMap 中的 key 必须实现 Comparable 接口，否则会报 ClassCastException 异常
+- TreeMap 会按照其 key 的 compareTo 方法来判断 key 是否重复
+## HashTable
+线程安全的HashMap，所有更改的方法都加上了sychronized 
 # List
 ## ArrayList
+- 采用数组，支持随机读写，随机访问快速，插入删除慢，默认为空数组，当为空数组增加元素时，初始化数组大小为10。当不为空数组时，为参数默认大小
+- 扩容会涉及到内存拷贝，效率底下，因此最好创建时就传入数组大小
 ## LinkedList
+- 采用链表实现了List,增加删除快速，随机访问慢，内存占用比ArrayList大。实现了Deque的接口，双端队列。
+- 内部数据结构为双端链表Node节点，带prev和next节点
 ## Vector
+线程安全的ArrayList
 # Set
 ## HashSet
-## TreeSet
-## SortedSet
+采用 HashMap 实现去重的集合
 # Queue
+队列，封装了队列相关的接口，可以用于实现生产者-消费者模型
 ## LinkedList
+如上
 ## PriorityQueue
+优先队列，采用二叉小顶堆实现，可以用完全二叉树表示
 ## LinkedBlockingQueue
-## BlockingQueue
+可以无界，容易内存溢出
+采用链表实现的阻塞队列，其中节点Node只保存后继节点，也即是前插法。链表记录head和last。
+采用ReentrantLock类型的putLock 和 takeLock 以及 Condition 类型的 notEmpty 和 notFull 来实现阻塞和线程安全
 ## ArrayBlockingQueue
+有界阻塞队列
+采用数组实现，采用一把锁实现的队列，循环数组，当putIndex的值到数组末尾时，将putIndex的置为0，Condition 类型的 notEmpty 和 notFull 来实现阻塞和线程安全
 ## PriorityBlockingQueue
-# Deque
-
-# spi

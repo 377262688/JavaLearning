@@ -1,5 +1,7 @@
 package com.york.javaLearning.util;
 
+import java.util.HashSet;
+
 /**
  * @author york
  * @create 2020-06-10 22:08
@@ -19,6 +21,7 @@ public class UtilTest {
         System.out.println(Integer.MAX_VALUE);
         System.out.println(Integer.MIN_VALUE);
         System.out.println(1 << 30);
+        HashSet set = new HashSet();
     }
 
 }
