@@ -58,7 +58,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,boolean evict){}
 # List
 ## ArrayList
 - 采用数组，支持随机读写，随机访问快速，插入删除慢，默认为空数组，当为空数组增加元素时，初始化数组大小为10。当不为空数组时，为参数默认大小
-- 扩容会涉及到内存拷贝，效率底下，因此最好创建时就传入数组大小
+- 扩容会涉及到内存拷贝，效率底下，因此最好创建时就传入数组大小,扩容会扩容一半当前大小
 ## LinkedList
 - 采用链表实现了List,增加删除快速，随机访问慢，内存占用比ArrayList大。实现了Deque的接口，双端队列。
 - 内部数据结构为双端链表Node节点，带prev和next节点
@@ -67,6 +67,67 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,boolean evict){}
 # Set
 ## HashSet
 采用 HashMap 实现去重的集合
+# concurrent
+## ConcurrentHashMap
+ConcurrentHashMap 总体上和 HashMap 类似，不允许 key 或者 value 为 null，而 ConcurrentHashMap 和 HashTable 是不支持为null 的。
+是因为 在并发环境下，put null 时，在查找key 的过程中 无法分辨 key 没找到为 null，还是有 key 的值为null。
+
+JDK 1.8 中，采用Node + CAS + synchronized来保证并发安全。取消类 Segment，直接用 table 数组存储键值对；
+当 HashEntry 对象组成的链表长度超过 TREEIFY_THRESHOLD 时，链表转换为红黑树，提升性能。底层变更为数组 + 链表 + 红黑树。
+
+使用 synchronized 来作为锁，是因为 synchronized 优化的足够好了，在并不是很高的情况下，synchronized 的性能和 ReentrantLock 相差不大，
+但是 ReentrantLock 会消耗更多的内存。
+
+①、重要的常量：
+
+private transient volatile int sizeCtl;
+
+当为负数时，-1 表示正在初始化，-N 表示 N - 1 个线程正在进行扩容；
+
+当为 0 时，表示 table 还没有初始化；
+
+当为其他正数时，表示初始化或者下一次进行扩容的大小。
+
+②、数据结构：
+
+Node 是存储结构的基本单元，继承 HashMap 中的 Entry，用于存储数据；
+TreeNode 继承 Node，但是数据结构换成了二叉树结构，是红黑树的存储结构，用于红黑树中存储数据；
+
+TreeBin 是封装 TreeNode 的容器，提供转换红黑树的一些条件和锁的控制。
+
+③、存储对象时（put() 方法）：
+
+如果没有初始化，就调用 initTable() 方法来进行初始化；
+
+如果没有 hash 冲突就直接 CAS 无锁插入；
+
+如果需要扩容，就先进行扩容；
+
+如果存在 hash 冲突，就加锁来保证线程安全，两种情况：一种是链表形式就直接遍历
+
+到尾端插入，一种是红黑树就按照红黑树结构插入；
+
+如果该链表的数量大于阀值 8，就要先转换成红黑树的结构，break 再一次进入循环
+
+如果添加成功就调用 addCount() 方法统计 size，并且检查是否需要扩容。
+
+④、扩容方法 transfer()：默认容量为 16，扩容时，容量变为原来的两倍。
+
+helpTransfer()：调用多个工作线程一起帮助进行扩容，这样的效率就会更高。
+
+⑤、获取对象时（get()方法）：
+
+计算 hash 值，定位到该 table 索引位置，如果是首结点符合就返回；
+
+如果遇到扩容时，会调用标记正在扩容结点 ForwardingNode.find()方法，查找该结点，匹配就返回；
+
+以上都不符合的话，就往下遍历结点，匹配就返回，否则最后就返回 null。
+
+## CopyOnWriteArrayList
+
+采用 ReentrantLock 和 数组实现，再每一个修改的地方都是会调用 lock 方法，然后复制一个新的数组出来进行更改，更改完成，赋值给原数组。
+读取的时候直接在原数组上读取，因此，在一个线程中刚插入的数据，另一个线程可能会存在读取不到的情况。
+
 # Queue
 队列，封装了队列相关的接口，可以用于实现生产者-消费者模型
 ## LinkedList
