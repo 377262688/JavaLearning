@@ -10,6 +10,15 @@ public class SonClass extends FatherClass {
     private volatile int mSonAge;
     public static final String mSonBirthday = "11";
 
+    public SonClass() {
+        System.out.println("构造方法调用");
+    }
+
+    public SonClass(String mSonName) {
+        System.out.println("有参构造方法调用");
+        this.mSonName = mSonName;
+    }
+
     public void printSonMsg(){
         System.out.println("Son Msg - name : "
                 + mSonName + "; age : " + mSonAge);

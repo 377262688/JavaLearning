@@ -8,7 +8,7 @@ import java.lang.reflect.*;
  **/
 public class ReflectTest {
 
-    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException, ClassNotFoundException {
+    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException, ClassNotFoundException, InstantiationException {
         Class mClass = SonClass.class;
         System.out.println("类的名称：" + mClass.getName());
 
@@ -70,13 +70,18 @@ public class ReflectTest {
         privateFiled.set(sonClass,111);
         System.out.println("修改变量之后的值" + sonClass.getSonAge());
         // 类加载
-        Class.forName("");
-        // 指定 classloader 和 是否执行 cinit方法
-        Class.forName("",false,mClass.getClassLoader());
-        // 通过classLoder 加载类
-        mClass.getClassLoader().loadClass("");
+//        Class.forName("");
+//        // 指定 classloader 和 是否执行 cinit方法
+//        Class.forName("",false,mClass.getClassLoader());
+//        // 通过classLoder 加载类
+//        mClass.getClassLoader().loadClass("");
         // Class.forName()：将类的.class文件加载到jvm中之外，还会对类进行解释，执行类中的static块；
         //ClassLoader.loadClass()：只干一件事情，就是将.class文件加载到jvm中，不会执行static中的内容,只有在newInstance才会去执行static块。
         //Class.forName(name, initialize, loader)带参函数也可控制是否加载static块。并且只有调用了newInstance()方法采用调用构造函数，创建类的对象。
+
+        sonClass = (SonClass) mClass.newInstance();
+        // 获取无参构造方法
+        Constructor<SonClass> constructor = mClass.getConstructor(String.class);
+        sonClass = constructor.newInstance("ddd");
     }
 }
