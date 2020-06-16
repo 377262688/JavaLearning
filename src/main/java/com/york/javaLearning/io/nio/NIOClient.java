@@ -14,9 +14,7 @@ public class NIOClient {
         Socket socket = new Socket("127.0.0.1",8888);
         OutputStream outputStream = socket.getOutputStream();
         String s = "hello world";
-        while (true) {
-            outputStream.write(s.getBytes());
-            outputStream.close();
-        }
+        outputStream.write(s.getBytes());
+        outputStream.close();
     }
 }
