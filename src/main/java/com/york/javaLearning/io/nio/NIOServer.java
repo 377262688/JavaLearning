@@ -42,6 +42,9 @@ public class NIOServer {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
                     System.out.println(readDataFromSocketChannel(socketChannel));
                     socketChannel.close();
+                } else if (key.isWritable()) {
+                    SocketChannel socketChannel = (SocketChannel) key.channel();
+                    String s = "sdadsa";
                 }
             }
         }
@@ -65,6 +68,10 @@ public class NIOServer {
             data.append(dst);
             buffer.clear();
         }
+        buffer.put("recive msg".getBytes());
+        buffer.flip();
+        socketChannel.write(buffer);
+        buffer.clear();
         return data.toString();
     }
 }
