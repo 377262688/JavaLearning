@@ -1,8 +1,6 @@
 package com.york.javaLearning.io.nio;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -21,22 +19,15 @@ public class BlockServer {
             Socket socket = serverSocket.accept();
             socket.setKeepAlive(true);
             System.out.println("接收到socket");
-            InputStream inputStream = socket.getInputStream();
-            byte[] bytes = new byte[1024];
-            StringBuilder stringBuilder = new StringBuilder();
-            OutputStream outputStream = socket.getOutputStream();
-            int read;
-            while ((read = inputStream.read(bytes)) > 0) {
-                System.out.println("read");
-                char[] chars = new char[read];
-                outputStream.write(bytes);
-                for (int i = 0; i < read; i++) {
-                    chars[i] = (char) bytes[i];
-                }
-                stringBuilder.append(chars);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            printWriter.println("收到");
+            printWriter.flush();
+            String read;
+            while ((read = reader.readLine()) != null) {
+                System.out.println(read);
             }
-            System.out.println(stringBuilder.toString());
-            outputStream.close();
+
         }
 
     }
