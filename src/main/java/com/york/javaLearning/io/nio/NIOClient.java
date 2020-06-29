@@ -10,7 +10,7 @@ import java.net.Socket;
  **/
 public class NIOClient {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Socket socket = new Socket();
         socket.connect(new InetSocketAddress("127.0.0.1",8889));
         socket.setKeepAlive(true);
@@ -21,10 +21,16 @@ public class NIOClient {
         printWriter.println(s);
         printWriter.flush();
         String input = reader.readLine();
-        while (input != null) {
-            System.out.println(input);
+        System.out.println(input);
+        printWriter.print("helleo 1");
+        printWriter.println("helleo 2");
+        printWriter.flush();
+
+        String read;
+        while ((read = reader.readLine()) != null) {
+            System.out.println(read);
         }
-        socket.close();
+
 
     }
 }
