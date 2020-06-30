@@ -38,13 +38,15 @@ public class NIOServer {
                     SocketChannel socketChannel1 = socketChannel.accept();
                     socketChannel1.configureBlocking(false);
                     socketChannel1.register(selector,SelectionKey.OP_READ);
+                    socketChannel1.register(selector,SelectionKey.OP_WRITE);
                 } else if (key.isReadable()) {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
                     System.out.println(readDataFromSocketChannel(socketChannel));
                     socketChannel.close();
-                } else if (key.isWritable()) {
+                } else if (key.isValid() && key.isWritable()) {
                     SocketChannel socketChannel = (SocketChannel) key.channel();
                     String s = "sdadsa";
+                    System.out.println("可以写数据了");
                 }
             }
         }
