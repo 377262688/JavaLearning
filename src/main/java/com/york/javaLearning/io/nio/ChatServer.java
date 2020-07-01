@@ -46,6 +46,7 @@ public class ChatServer {
 
     private static void doAccept(ServerSocketChannel sc) throws IOException {
         SocketChannel clientChannel = sc.accept();
+        clientChannel.socket().setKeepAlive(true);
         clientChannel.configureBlocking(false);
         SelectionKey clientKey = clientChannel.register(selector, SelectionKey.OP_READ);
 
