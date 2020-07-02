@@ -41,7 +41,7 @@ public class NioHttpServer {
                     doAccept(key);
                 } else if (key.isReadable()) {
                     doRead(key);
-                } else if (key.isWritable()) {
+                } else if (key.isValid() && key.isWritable()) {
                     doWrite(key);
                 }
             }
@@ -60,8 +60,10 @@ public class NioHttpServer {
         ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
         System.out.println(bytes.length);
         buffer.put(bytes);
+        buffer.flip();
         socketChannel.write(buffer);
-
+        socketChannel.register(selector,SelectionKey.OP_READ);
+//        key.interestOps(SelectionKey.OP_READ);
     }
 
     private static void doRead(SelectionKey key) throws IOException {
@@ -79,6 +81,8 @@ public class NioHttpServer {
             read = socketChannel.read(buffer);
         }
         System.out.println(stringBuilder.toString());
+        System.out.println("注册事件");
+//        key.interestOps(SelectionKey.OP_WRITE);
         socketChannel.register(selector,SelectionKey.OP_WRITE);
     }
 
