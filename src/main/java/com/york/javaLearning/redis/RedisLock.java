@@ -1,6 +1,7 @@
 package com.york.javaLearning.redis;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 /**
@@ -16,11 +17,17 @@ public class RedisLock {
     }
 
     public boolean lock(String key) {
-        return jedisPool.getResource().set(key, "lock", "nx", "ex", 5L) != null;
+        Jedis jedis = jedisPool.getResource();
+        boolean locked = jedis.set(key, "lock", "nx", "ex", 5L) != null;
+        // 释放资源，否则会死锁
+        jedis.close();
+        return locked;
     }
 
     public void unlock(String key) {
-        jedisPool.getResource().del(key);
+        Jedis jedis = jedisPool.getResource();
+        jedis.del(key);
+        jedis.close();
     }
 
     public static void main(String[] args) throws InterruptedException {
