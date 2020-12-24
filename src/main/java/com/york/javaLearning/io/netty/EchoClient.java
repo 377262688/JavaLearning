@@ -28,7 +28,9 @@ public class EchoClient {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new EchoClientHandler());
+                            ch.pipeline()
+                                    .addLast(new EchoClientHandler())
+                            .addLast(new EchoClientHandler1());
                         }
                     });
             ChannelFuture channelFuture = bootstrap.connect().sync();
