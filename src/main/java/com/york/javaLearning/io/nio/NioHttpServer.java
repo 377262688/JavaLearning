@@ -25,12 +25,12 @@ public class NioHttpServer {
         ServerSocketChannel ssc = ServerSocketChannel.open();
         ServerSocket serverSocket = ssc.socket();
         ssc.configureBlocking(false);
-        SocketAddress address = new InetSocketAddress("127.0.0.1",8003);
+        SocketAddress address = new InetSocketAddress("127.0.0.1", 8003);
         serverSocket.bind(address);
 
         ssc.register(selector, SelectionKey.OP_ACCEPT);
 
-        for (;;) {
+        for (; ; ) {
             selector.select();
             Set<SelectionKey> keys = selector.selectedKeys();
             Iterator<SelectionKey> iterator = keys.iterator();
@@ -62,7 +62,7 @@ public class NioHttpServer {
         buffer.put(bytes);
         buffer.flip();
         socketChannel.write(buffer);
-        socketChannel.register(selector,SelectionKey.OP_READ);
+        socketChannel.register(selector, SelectionKey.OP_READ);
 //        key.interestOps(SelectionKey.OP_READ);
     }
 
@@ -83,14 +83,14 @@ public class NioHttpServer {
         System.out.println(stringBuilder.toString());
         System.out.println("注册事件");
 //        key.interestOps(SelectionKey.OP_WRITE);
-        socketChannel.register(selector,SelectionKey.OP_WRITE);
+        socketChannel.register(selector, SelectionKey.OP_WRITE);
     }
 
     private static void doAccept(SelectionKey key) throws IOException {
         ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
         SocketChannel sc = ssc.accept();
         sc.configureBlocking(false);
-        sc.register(selector,SelectionKey.OP_READ);
+        sc.register(selector, SelectionKey.OP_READ);
         System.out.println("accepted");
     }
 }
