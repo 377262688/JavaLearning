@@ -99,7 +99,7 @@ public static void getLast(Vector list) {
 
 ```java
 public static void deleteLast(Vector list) {
-    synchrnized(list) {
+    synchronized(list) {
         int lastIndex = list.size() - 1;
         list.remove(lastIndex);
     }
@@ -107,7 +107,7 @@ public static void deleteLast(Vector list) {
 }
 
 public static void getLast(Vector list) {
-    synchrnized(list) {
+    synchronized(list) {
         int lastIndex = list.size() - 1;
         list.get(lastIndex);
     }
