@@ -75,6 +75,72 @@
 - 找出约束状态变量的不变性条件
 - 简历对象状态的并发访问管理策略
 
+### 5.基础构建
+
+#### 5.1 同步容器类
+
+##### 5.1.1 容器组合操作线程安全有问题
+
+```java
+public static void deleteLast(Vector list) {
+    int lastIndex = list.size() - 1;
+    list.remove(lastIndex);
+}
+
+public static void getLast(Vector list) {
+        int lastIndex = list.size() - 1;
+        list.get(lastIndex);
+}
+```
+
+并发条件下会报错。
+
+修改为获取Vector同一个锁，保证原子操作
+
+```java
+public static void deleteLast(Vector list) {
+    synchrnized(list) {
+        int lastIndex = list.size() - 1;
+        list.remove(lastIndex);
+    }
+    
+}
+
+public static void getLast(Vector list) {
+    synchrnized(list) {
+        int lastIndex = list.size() - 1;
+        list.get(lastIndex);
+    }
+}
+```
+
+迭代时，其他线程删除了数据，也会导致错误。
+
+容器设计为抛出一个ConcurrentModificationException()
+
+#### 5.2 并发容器
+
+#### 5.3 并发工具
+
+
+## 第一部分 总结
+- 可变状态是至关重要的：所有的并发问题都可以归结为如何协调对并发状态的访问，可变状态越少，就越容易确保线程安全
+- 尽量将域声明为final，除非他们可变
+- 不可变对象一定是线程安全的
+- 封装有助于管理复杂性
+- 用锁来保护每个可变变量
+- 当保护同一个不变性的所有变量时，使用同一个锁
+- 执行复合操作期间，要持有锁
+- 如果多个线程访问同一个可变变量时，没有同步机制会出问题
+- 不要故作聪明的去推断不需要同步
+
+## 第二部分 结构化并发程序
+
+### 6.任务执行
+
+
+
+
   
 
   
